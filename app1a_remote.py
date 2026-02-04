@@ -61,12 +61,15 @@ embeddings = load_embeddings()
 #────────────────────────────────────────────────
 #Session state
 #────────────────────────────────────────────────
-if "rag_chain" not in st.session_state:
-st.session_state.rag_chain = None
+f "rag_chain" not in st.session_state:
+    st.session_state.rag_chain = None
+
 if "messages" not in st.session_state:
-st.session_state.messages = []
+    st.session_state.messages = []
+
 if "df" not in st.session_state:
-st.session_state.df = None
+    st.session_state.df = None
+
 #────────────────────────────────────────────────
 #UI
 #────────────────────────────────────────────────
@@ -245,6 +248,7 @@ except Exception as e:
 st.error(f"Error: {str(e)}")
 st.caption("These are general ideas only. Always see a doctor for real advice.")
 Upgrade to SuperGrok
+
 
 
 
