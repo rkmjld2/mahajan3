@@ -9,9 +9,10 @@ langchain-groq==0.2.3
 groq==0.13.0
 
 # Install without dependencies to avoid conflict
-faiss-cpu==1.7.4 --no-deps
+faiss-cpu==1.7.4 
 sentence-transformers==3.1.1 
 torch==2.4.1
+
 
 
 
