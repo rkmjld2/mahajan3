@@ -169,7 +169,8 @@ Answer (concise, factual, include unit/range/flag):"""
                 # Groq LLM wrapper (LangChain compatible)
                 from langchain_groq import ChatGroq
                 llm = ChatGroq(
-                    model="llama-3.1-70b-versatile",   # or "mixtral-8x7b-32768", "gemma2-9b-it", etc.
+                    model="llama-3.3-70b-versatile",
+                    #model="llama-3.1-70b-versatile",   # or "mixtral-8x7b-32768", "gemma2-9b-it", etc.
                     temperature=0.15,
                     max_tokens=1200,
                     api_key=st.secrets.get("GROQ_API_KEY") or st.session_state.get("groq_api_key")
@@ -236,5 +237,6 @@ Answer (concise, factual, include unit/range/flag):"""
                 help="Saves all questions and answers in nicely formatted markdown",
                 use_container_width=False
             )
+
 
 
