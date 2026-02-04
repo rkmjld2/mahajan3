@@ -183,33 +183,35 @@ Answer (concise, factual, include unit/range/flag):"""
             
             st.success(f"Table processed! ({len(chunks)} chunks) → Ask questions now.")
 
-    # ── Chat area ────────────────────────────────────────
+# ── Chat interface ───────────────────────────────────────────
     if st.session_state.rag_chain is not None:
         st.divider()
-        st.markdown("### Ask questions about the current report")
+        st.subheader("Ask questions about the report")
 
-        for msg in st.session_state.messages:
-            with st.chat_message(msg["role"]):
-                st.markdown(msg["content"])
+        # Display chat history
+        for message in st.session_state.messages:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
 
-        if query := st.chat_input("Ask anything about the report (e.g. 'Is glucose high?')"):
-            st.session_state.messages.append({"role": "user", "content": query})
+        # Input
+        if prompt := st.chat_input("Ask something about the report (e.g. Is cholesterol high?)"):
+            st.session_state.messages.append({"role": "user", "content": prompt})
             with st.chat_message("user"):
-                st.markdown(query)
+                st.markdown(prompt)
 
             with st.chat_message("assistant"):
                 with st.spinner("Thinking..."):
                     start_time = time.time()
                     try:
-                        response = st.session_state.rag_chain.invoke({"input": query})
+                        response = st.session_state.rag_chain.invoke({"input": prompt})
                         answer = response["answer"].strip()
                         st.markdown(answer)
                         elapsed = time.time() - start_time
                         st.caption(f"Answered in {elapsed:.1f} seconds")
                     except Exception as e:
                         st.error(f"Error: {str(e)}")
-                        answer = f"Error: {str(e)}"
-            
+                        answer = "(error occurred)"
+
             st.session_state.messages.append({"role": "assistant", "content": answer})
 
               # ── Download Q&A ────────────────────────────────────────────────
@@ -237,6 +239,7 @@ Answer (concise, factual, include unit/range/flag):"""
                 help="Saves all questions and answers in nicely formatted markdown",
                 use_container_width=False
             )
+
 
 
 
