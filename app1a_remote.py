@@ -238,5 +238,6 @@ rec_answer = rec_response.content.strip()
 st.markdown(rec_answer)
 except Exception as e:
 st.error(f"Error: {str(e)}")
-st.caption("These are general ideas only. Always see a doctor for real advice.")15.5sExpert
+st.caption("These are general ideas only. Always see a doctor for real advice.")
 Upgrade to SuperGrok
+
