@@ -17,6 +17,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.documents import Document
+from langchain_groq import ChatGroq
 #Groq client
 from groq import Groq
 st.set_page_config(page_title="Blood Report Analyzer • Groq", layout="wide")
@@ -280,6 +281,7 @@ Answer in bullet points, be concise and cautious."""
                         st.error(f"Error: {str(e)}")
 
             st.caption("These are general ideas only. Always see a doctor for real advice.")
+
 
 
 
