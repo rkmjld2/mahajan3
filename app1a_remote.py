@@ -76,34 +76,44 @@ if "df" not in st.session_state:
 st.title("🩸 Blood Report Analyzer – Groq Edition")
 st.caption("Paste → Edit table → Process → Ask questions • Powered by Groq • Internet required")
 tab1, tab2 = st.tabs(["📊 Paste & Edit Table", "ℹ️ How to use"])
+
 with tab1:
-st.markdown(
-"Paste your blood report table (copy from PDF, lab portal, Excel, WhatsApp, etc.)\n"
-"Columns should be separated by tabs, commas, or spaces."
-)
-raw_paste = st.text_area(
-"1. Paste raw tabular text here",
-height=220,
-value="""Test,Result,Unit,Reference Range,Flag
+    st.markdown(
+        "Paste your blood report table (from PDF, lab website, WhatsApp, Excel, etc.)\n"
+        "Best results when columns are separated by **comma**, **tab** or **spaces**."
+    )
+
+    raw_text = st.text_area(
+        "1. Paste your report table here",
+        height=240,
+        value="""Test,Result,Unit,Reference Range,Flag
 Hemoglobin,12.4,g/dL,13.0 - 17.0,L
 WBC,8.2,10^3/µL,4.0 - 11.0,
 Glucose (Fasting),102,mg/dL,70 - 99,H
 Creatinine,1.1,mg/dL,0.6 - 1.2,
 ALT,45,U/L,7 - 56,
 Total Cholesterol,210,mg/dL,<200,H""",
-help="Best if columns are separated by comma or tab"
-)
-if st.button("2. Parse pasted text → Show editable table", type="primary"):
-if raw_paste.strip():
-try:
-df = pd.read_csv(StringIO(raw_paste), sep=None, engine="python", on_bad_lines="skip")
-df = df.dropna(how="all")
-st.session_state.df = df
-st.success(f"Table parsed! {len(df)} rows detected.")
-except Exception as e:
-st.error(f"Parsing failed: {str(e)}")
-else:
-st.warning("Please paste some table text first.")
+        help="Copy table from PDF viewer, lab portal, Excel or text message"
+    )
+
+    if st.button("2. Parse text → Show editable table", type="primary", use_container_width=True):
+        if raw_text.strip():
+            try:
+                df = pd.read_csv(StringIO(raw_text), sep=None, engine="python", on_bad_lines="skip")
+                df = df.dropna(how="all")
+                st.session_state.df = df
+                st.success(f"Parsed successfully — {len(df)} rows found")
+            except Exception as e:
+                st.error(f"Could not parse the table.\nError: {str(e)}")
+        else:
+            st.warning("Please paste some table content first.")
+
+    # ... rest of your tab1 code (data_editor, process button, etc.) should also be indented here ...
+
+
+
+
+
 if st.session_state.df is not None:
 st.markdown("3. Edit values directly in the table below")
 edited_df = st.data_editor(
@@ -248,6 +258,7 @@ except Exception as e:
 st.error(f"Error: {str(e)}")
 st.caption("These are general ideas only. Always see a doctor for real advice.")
 Upgrade to SuperGrok
+
 
 
 
