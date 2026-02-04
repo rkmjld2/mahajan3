@@ -52,10 +52,11 @@ def get_groq_client():
 #────────────────────────────────────────────────
 @st.cache_resource(show_spinner=False)
 def load_embeddings():
-return HuggingFaceEmbeddings(
-model_name="sentence-transformers/all-MiniLM-L6-v2",
-model_kwargs={'device': 'cpu'}
-)
+    return HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2",
+        model_kwargs={'device': 'cpu'}
+    )
+
 embeddings = load_embeddings()
 #────────────────────────────────────────────────
 #Session state
@@ -244,5 +245,6 @@ except Exception as e:
 st.error(f"Error: {str(e)}")
 st.caption("These are general ideas only. Always see a doctor for real advice.")
 Upgrade to SuperGrok
+
 
 
