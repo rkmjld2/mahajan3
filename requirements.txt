@@ -10,8 +10,9 @@ groq==0.13.0
 
 # Install without dependencies to avoid conflict
 faiss-cpu==1.7.4 --no-deps
-sentence-transformers==3.1.1 --no-deps
+sentence-transformers==3.1.1 
 torch==2.4.1
+
 
 
 
