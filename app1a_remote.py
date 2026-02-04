@@ -61,7 +61,7 @@ embeddings = load_embeddings()
 #────────────────────────────────────────────────
 #Session state
 #────────────────────────────────────────────────
-f "rag_chain" not in st.session_state:
+if "rag_chain" not in st.session_state:
     st.session_state.rag_chain = None
 
 if "messages" not in st.session_state:
@@ -248,6 +248,7 @@ except Exception as e:
 st.error(f"Error: {str(e)}")
 st.caption("These are general ideas only. Always see a doctor for real advice.")
 Upgrade to SuperGrok
+
 
 
 
