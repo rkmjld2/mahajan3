@@ -231,57 +231,55 @@ Answer (concise, factual, include unit/range/flag):"""
 
 
 
+        # ──────────────────────────────
+        # Added: Recommendation section with button
+        # ──────────────────────────────
+        # ── Recommendation interface ───────────────────────────────────────────
+        if st.session_state.rag_chain is not None:
+            st.divider()
+            st.subheader("General Recommendations (not medical advice)")
 
+            if st.button("Get Recommendations for Abnormal Values", type="primary", use_container_width=True):
+                with st.spinner("Generating general suggestions..."):
+                    # Use the same retriever to get context (abnormal values)
+                    abnormal_context = st.session_state.rag_chain.invoke({"input": "any abnormal report"})["answer"].strip()
 
-
-
-#──────────────────────────────
-#Added: Recommendation section with button
-#──────────────────────────────
-#── Recommendation interface ───────────────────────────────────────────
-if st.session_state.rag_chain is not None:
-st.divider()
-st.subheader("General Recommendations (not medical advice)")
-if st.button("Get Recommendations for Abnormal Values", type="primary", use_container_width=True):
-with st.spinner("Generating general suggestions..."):
-#Use the same retriever to get context (abnormal values)
-abnormal_context = st.session_state.rag_chain.invoke({"input": "any abnormal report"})["answer"].strip()
-#New prompt for recommendations
-rec_prompt_template = """You are a general health information assistant.
+                    # New prompt for recommendations
+                    rec_prompt_template = """You are a general health information assistant.
 Based on the abnormal lab values below, provide ONLY very general suggestions for recovery.
 For each abnormal value:
-
-Suggest common lifestyle, diet changes (e.g. exercise, low sugar diet)
-Mention general medicine classes if relevant (e.g. "doctors may consider statins for high cholesterol")
-ALWAYS say: "This is not medical advice. Consult a qualified doctor for personalized treatment and medicines."
-NEVER prescribe specific medicines or dosages.
-NEVER diagnose diseases.
+- Suggest common lifestyle, diet changes (e.g. exercise, low sugar diet)
+- Mention general medicine classes if relevant (e.g. "doctors may consider statins for high cholesterol")
+- ALWAYS say: "This is not medical advice. Consult a qualified doctor for personalized treatment and medicines."
+- NEVER prescribe specific medicines or dosages.
+- NEVER diagnose diseases.
 
 Abnormal values from report:
 {abnormal_context}
+
 Answer in bullet points, be concise and cautious."""
-rec_prompt = ChatPromptTemplate.from_template(rec_prompt_template)
-#Use same LLM
-rec_llm = ChatGroq(
-model="llama-3.3-70b-versatile",
-temperature=0.2,
-max_tokens=800,
-api_key=st.session_state.groq_api_key
-)
-#Simple chain for recommendations (no retriever needed, just prompt)
-rec_chain = rec_prompt | rec_llm
-try:
-rec_response = rec_chain.invoke({"abnormal_context": abnormal_context})
-rec_answer = rec_response.content.strip()
-st.markdown(rec_answer)
-except Exception as e:
-st.error(f"Error: {str(e)}")
-st.caption("These are general ideas only. Always see a doctor for real advice.")
-Upgrade to SuperGrok
 
+                    rec_prompt = ChatPromptTemplate.from_template(rec_prompt_template)
 
+                    # Use same LLM
+                    rec_llm = ChatGroq(
+                        model="llama-3.3-70b-versatile",
+                        temperature=0.2,
+                        max_tokens=800,
+                        api_key=st.session_state.groq_api_key
+                    )
 
+                    # Simple chain for recommendations (no retriever needed, just prompt)
+                    rec_chain = rec_prompt | rec_llm
 
+                    try:
+                        rec_response = rec_chain.invoke({"abnormal_context": abnormal_context})
+                        rec_answer = rec_response.content.strip()
+                        st.markdown(rec_answer)
+                    except Exception as e:
+                        st.error(f"Error: {str(e)}")
+
+            st.caption("These are general ideas only. Always see a doctor for real advice.")
 
 
 
