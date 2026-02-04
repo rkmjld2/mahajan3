@@ -230,11 +230,6 @@ Answer (concise, factual, include unit/range/flag):"""
                 use_container_width=False
             )
 
-
-
-        # ──────────────────────────────
-        # Added: Recommendation section with button
-        # ──────────────────────────────
         # ── Recommendation interface ───────────────────────────────────────────
         if st.session_state.rag_chain is not None:
             st.divider()
@@ -242,6 +237,11 @@ Answer (concise, factual, include unit/range/flag):"""
 
             if st.button("Get Recommendations for Abnormal Values", type="primary", use_container_width=True):
                 with st.spinner("Generating general suggestions..."):
+                    # Safety check: make sure API key exists
+                    if "groq_api_key" not in st.session_state or not st.session_state.groq_api_key:
+                        st.error("Groq API key is missing or invalid. Please set it again in the sidebar.")
+                        st.stop()
+
                     # Use the same retriever to get context (abnormal values)
                     abnormal_context = st.session_state.rag_chain.invoke({"input": "any abnormal report"})["answer"].strip()
 
@@ -262,7 +262,7 @@ Answer in bullet points, be concise and cautious."""
 
                     rec_prompt = ChatPromptTemplate.from_template(rec_prompt_template)
 
-                    # Use same LLM
+                    # Use same LLM — with safety
                     rec_llm = ChatGroq(
                         model="llama-3.3-70b-versatile",
                         temperature=0.2,
@@ -270,7 +270,7 @@ Answer in bullet points, be concise and cautious."""
                         api_key=st.session_state.groq_api_key
                     )
 
-                    # Simple chain for recommendations (no retriever needed, just prompt)
+                    # Simple chain for recommendations
                     rec_chain = rec_prompt | rec_llm
 
                     try:
@@ -278,10 +278,8 @@ Answer in bullet points, be concise and cautious."""
                         rec_answer = rec_response.content.strip()
                         st.markdown(rec_answer)
                     except Exception as e:
-                        st.error(f"Error: {str(e)}")
+                        st.error(f"Error generating recommendations: {str(e)}")
 
             st.caption("These are general ideas only. Always see a doctor for real advice.")
 
-
-
-
+        
