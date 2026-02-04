@@ -24,25 +24,29 @@ st.set_page_config(page_title="Blood Report Analyzer • Groq", layout="wide")
 #Groq API Key handling
 #────────────────────────────────────────────────
 def get_groq_client():
-#Priority: secrets > text input > environment
-api_key = None
-#1. Try Streamlit secrets (recommended for cloud)
-try:
-api_key = st.secrets["GROQ_API_KEY"]
-except:
-pass
-#2. Fallback to input field (for local testing)
-if not api_key:
-api_key = st.sidebar.text_input(
-"Groq API Key",
-type="password",
-placeholder="gsk_...",
-help="Get your key at: https://console.groq.com/keys"
-)
-if not api_key:
-st.warning("Please enter your Groq API key to continue.")
-st.stop()
-return Groq(api_key=api_key)
+    # Priority: secrets > text input > environment
+    api_key = None
+    
+    # 1. Try Streamlit secrets (recommended for cloud)
+    try:
+        api_key = st.secrets["GROQ_API_KEY"]
+    except:
+        pass
+    
+    # 2. Fallback to input field (for local testing)
+    if not api_key:
+        api_key = st.sidebar.text_input(
+            "Groq API Key",
+            type="password",
+            placeholder="gsk_...",
+            help="Get your key at: https://console.groq.com/keys"
+        )
+    
+    if not api_key:
+        st.warning("Please enter your Groq API key to continue.")
+        st.stop()
+    
+    return Groq(api_key=api_key)
 #────────────────────────────────────────────────
 #Embeddings (works everywhere - no local Ollama needed)
 #────────────────────────────────────────────────
@@ -240,4 +244,5 @@ except Exception as e:
 st.error(f"Error: {str(e)}")
 st.caption("These are general ideas only. Always see a doctor for real advice.")
 Upgrade to SuperGrok
+
 
