@@ -24,30 +24,49 @@ st.set_page_config(page_title="Blood Report Analyzer • Groq", layout="wide")
 #────────────────────────────────────────────────
 #Groq API Key handling
 #────────────────────────────────────────────────
-def get_groq_client():
-    # Priority: secrets > text input > environment
+# Sidebar - Groq API Key (always show input on cloud too)
+with st.sidebar:
+    st.markdown("### Groq API Key")
+
     api_key = None
-    
-    # 1. Try Streamlit secrets (recommended for cloud)
+
+    # 1. Try to load from Streamlit secrets (best for cloud deployment)
     try:
         api_key = st.secrets["GROQ_API_KEY"]
+        st.success("Using API key from secrets ✓")
     except:
         pass
-    
-    # 2. Fallback to input field (for local testing)
+
+    # 2. If no secret found → show input field (works both local and cloud)
     if not api_key:
-        api_key = st.sidebar.text_input(
-            "Groq API Key",
+        api_key_input = st.text_input(
+            "Enter Groq API key",
             type="password",
             placeholder="gsk_...",
-            help="Get your key at: https://console.groq.com/keys"
+            value="",
+            key="groq_api_input"
         )
-    
+        if api_key_input:
+            api_key = api_key_input
+            st.success("Key entered manually ✓")
+        else:
+            st.warning("Please enter your Groq API key above to use the app.")
+            st.stop()
+
+    # Safety check
     if not api_key:
-        st.warning("Please enter your Groq API key to continue.")
+        st.error("No valid Groq API key found.")
         st.stop()
-    
-    return Groq(api_key=api_key)
+
+    # Store in session state so the rest of the app can use it
+    st.session_state.groq_api_key = api_key
+
+    st.markdown("---")
+    st.caption("Model: llama-3.3-70b-versatile via Groq")
+
+
+
+
 #────────────────────────────────────────────────
 #Embeddings (works everywhere - no local Ollama needed)
 #────────────────────────────────────────────────
@@ -283,3 +302,4 @@ Answer in bullet points, be concise and cautious."""
             st.caption("These are general ideas only. Always see a doctor for real advice.")
 
         
+
