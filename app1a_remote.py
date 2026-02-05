@@ -265,7 +265,7 @@ Answer (concise, factual, include unit/range/flag):"""
                     abnormal_context = st.session_state.rag_chain.invoke({"input": "any abnormal report"})["answer"].strip()
 
                     # New prompt for recommendations
-					rec_prompt_template = """You are a general health information assistant — NOT a doctor.
+rec_prompt_template = """You are a general health information assistant — NOT a doctor.
 
 Based ONLY on the abnormal lab values listed below, provide very general, commonly known suggestions.
 
@@ -313,4 +313,5 @@ Answer in clear bullet points. Be concise, factual, and extremely cautious."""
             st.caption("These are general ideas only. Always see a doctor for real advice.")
 
         
+
 
