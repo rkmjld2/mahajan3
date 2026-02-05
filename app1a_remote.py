@@ -265,21 +265,25 @@ Answer (concise, factual, include unit/range/flag):"""
                     # Use the same retriever to get context (abnormal values)
                     abnormal_context = st.session_state.rag_chain.invoke({"input": "any abnormal report"})["answer"].strip()
 
-                    # New prompt for recommendations
-                    rec_prompt_template = """You are a general health information assistant.
-Based on the abnormal lab values below, provide ONLY very general suggestions for recovery.
+rec_prompt_template = """You are a general health information assistant — NOT a doctor. You NEVER prescribe, recommend or advise taking any medicine.
+
+Based ONLY on the abnormal lab values below:
+
 For each abnormal value:
-- Suggest common lifestyle, diet changes (e.g. exercise, low sugar diet)
-- Mention general medicine classes if relevant (e.g. "doctors may consider statins for high cholesterol")
-- ALWAYS say: "This is not medical advice. Consult a qualified doctor for personalized treatment and medicines."
-- NEVER prescribe specific medicines or dosages.
-- NEVER diagnose diseases.
+- Suggest common lifestyle and diet changes
+- Mention the most common **medicine class** doctors sometimes consider
+- If the condition is very well-known, you may give **1–2 extremely common generic medicine examples** (only ferrous sulfate for iron, metformin for glucose, atorvastatin/rosuvastatin for cholesterol — nothing else)
+- ALWAYS start medicine mention with: "Doctors sometimes consider medicines from the class of..."
+- NEVER use words like "take", "prescribe", "you should", "recommended dose"
+- NEVER give dosage, duration, brand names, or any instruction to use medicine
+
+MANDATORY ENDING (must appear exactly):
+"This is NOT medical advice. NEVER take any medicine based on this information. Only a qualified doctor can diagnose you, decide if any treatment is needed, and prescribe the correct medicine if appropriate."
 
 Abnormal values from report:
 {abnormal_context}
 
-Answer in bullet points, be concise and cautious."""
-
+Answer in bullet points. Be extremely cautious and responsible."""
                     rec_prompt = ChatPromptTemplate.from_template(rec_prompt_template)
 
                     # Use same LLM — with safety
@@ -301,3 +305,4 @@ Answer in bullet points, be concise and cautious."""
                         st.error(f"Error generating recommendations: {str(e)}")
 
             st.caption("These are general ideas only. Always see a doctor for real advice.")
+
