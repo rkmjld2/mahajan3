@@ -1,4 +1,4 @@
-#blood_report_analyzer_groq.py
+    #blood_report_analyzer_groq.py
 #Version with Groq API - suitable for Streamlit Cloud / GitHub
 import streamlit as st
 import pandas as pd
@@ -305,6 +305,7 @@ Answer in bullet points. Be extremely cautious and responsible."""
                         st.markdown(rec_answer)
                     except Exception as e:
                         st.error(f"Error generating recommendations: {str(e)}")
+
 
 
 
