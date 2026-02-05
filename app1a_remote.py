@@ -250,13 +250,14 @@ Answer (concise, factual, include unit/range/flag):"""
             )
 
         # ── Recommendation interface ───────────────────────────────────────────
+            # ── Recommendation interface ───────────────────────────────────────────
         if st.session_state.rag_chain is not None:
             st.divider()
             st.subheader("General Recommendations (not medical advice)")
 
             if st.button("Get Recommendations for Abnormal Values", type="primary", use_container_width=True):
                 with st.spinner("Generating general suggestions..."):
-                    # Safety check: make sure API key exists
+                    # Safety check for API key
                     if "groq_api_key" not in st.session_state or not st.session_state.groq_api_key:
                         st.error("Groq API key is missing or invalid. Please set it again in the sidebar.")
                         st.stop()
@@ -265,33 +266,22 @@ Answer (concise, factual, include unit/range/flag):"""
                     abnormal_context = st.session_state.rag_chain.invoke({"input": "any abnormal report"})["answer"].strip()
 
                     # New prompt for recommendations
-rec_prompt_template = """You are a general health information assistant — NOT a doctor.
-
-Based ONLY on the abnormal lab values listed below, provide very general, commonly known suggestions.
-
+                    rec_prompt_template = """You are a general health information assistant.
+Based on the abnormal lab values below, provide ONLY very general suggestions for recovery.
 For each abnormal value:
-- Suggest lifestyle and diet changes (examples: more exercise, less sugar, more vegetables)
-- Mention the **general class** of medicines doctors sometimes consider for that condition
-- Give 1–2 very common medicine **examples** (only well-known ones)
-- ALWAYS start each medicine mention with: "Doctors sometimes consider..."
-- ALWAYS end with: "This is NOT a recommendation to take any medicine. Only a qualified doctor can decide if any medicine is needed, and which one."
-
-VERY STRICT RULES:
-- NEVER tell the user to take any specific medicine
-- NEVER give dosage or duration
-- NEVER say "you should take" or "take this medicine"
-- NEVER diagnose any disease
-- ALWAYS include at the end: "This is not medical advice. Consult a qualified doctor for personalized treatment, diagnosis, and medicines."
+- Suggest common lifestyle, diet changes (e.g. exercise, low sugar diet)
+- Mention general medicine classes if relevant (e.g. "doctors may consider statins for high cholesterol")
+- ALWAYS say: "This is not medical advice. Consult a qualified doctor for personalized treatment and medicines."
+- NEVER prescribe specific medicines or dosages.
+- NEVER diagnose diseases.
 
 Abnormal values from report:
 {abnormal_context}
 
-Answer in clear bullet points. Be concise, factual, and extremely cautious."""
-					
-                    
+Answer in bullet points, be concise and cautious."""
 
-rec_prompt = ChatPromptTemplate.from_template(rec_prompt_template)
-					
+                    rec_prompt = ChatPromptTemplate.from_template(rec_prompt_template)
+
                     # Use same LLM — with safety
                     rec_llm = ChatGroq(
                         model="llama-3.3-70b-versatile",
@@ -300,7 +290,7 @@ rec_prompt = ChatPromptTemplate.from_template(rec_prompt_template)
                         api_key=st.session_state.groq_api_key
                     )
 
-                    # Simple chain for recommendations
+                    # Simple chain for recommendations (no retriever needed, just prompt)
                     rec_chain = rec_prompt | rec_llm
 
                     try:
@@ -311,10 +301,3 @@ rec_prompt = ChatPromptTemplate.from_template(rec_prompt_template)
                         st.error(f"Error generating recommendations: {str(e)}")
 
             st.caption("These are general ideas only. Always see a doctor for real advice.")
-
-        
-
-
-
-
-
