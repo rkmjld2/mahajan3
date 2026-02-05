@@ -291,7 +291,7 @@ Answer in clear bullet points. Be concise, factual, and extremely cautious."""
                     
 
 rec_prompt = ChatPromptTemplate.from_template(rec_prompt_template)
-
+					
                     # Use same LLM — with safety
                     rec_llm = ChatGroq(
                         model="llama-3.3-70b-versatile",
@@ -313,6 +313,7 @@ rec_prompt = ChatPromptTemplate.from_template(rec_prompt_template)
             st.caption("These are general ideas only. Always see a doctor for real advice.")
 
         
+
 
 
 
