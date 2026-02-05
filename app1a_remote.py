@@ -172,10 +172,19 @@ Total Cholesterol,210,mg/dL,<200,H""",
 Use ONLY the information from the report table excerpts below.
 If a value is missing or normal → say "not found in report" or "within normal range".
 Never diagnose diseases. Only report values, flags, ranges.
+
+Important formatting rules:
+- When listing test results or abnormal values, ALWAYS use bullet points (- or *)
+- One test per line
+- Format each line like: - Test Name: value unit (reference range, flag)
+- Make it clear and easy to read
+
 Report table excerpts:
 {context}
+
 Question: {input}
-Answer (concise, factual, include unit/range/flag):"""
+
+Answer (use bullet points for any list of results):"""
                 prompt = ChatPromptTemplate.from_template(prompt_template)
 
                 # Groq LLM wrapper (LangChain compatible)
@@ -306,3 +315,4 @@ Answer in bullet points. Be extremely cautious and responsible."""
                         st.error(f"Error generating recommendations: {str(e)}")
 
             st.caption("These are general ideas only. Always see a doctor for real advice.")
+
