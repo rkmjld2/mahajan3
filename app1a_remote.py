@@ -284,7 +284,9 @@ Abnormal values from report:
 
 Answer in bullet points. Be extremely cautious and responsible."""
 
-rec_prompt = ChatPromptTemplate.from_template(rec_prompt_template)
+Answer in bullet points. Be extremely cautious and responsible."""
+
+                    rec_prompt = ChatPromptTemplate.from_template(rec_prompt_template)
 
                     # Use same LLM — with safety
                     rec_llm = ChatGroq(
@@ -303,8 +305,6 @@ rec_prompt = ChatPromptTemplate.from_template(rec_prompt_template)
                         st.markdown(rec_answer)
                     except Exception as e:
                         st.error(f"Error generating recommendations: {str(e)}")
-
-            st.caption("These are general ideas only. Always see a doctor for real advice.")
 
 
 
