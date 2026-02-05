@@ -264,7 +264,6 @@ Answer (concise, factual, include unit/range/flag):"""
 
                     # Use the same retriever to get context (abnormal values)
                     abnormal_context = st.session_state.rag_chain.invoke({"input": "any abnormal report"})["answer"].strip()
-
 rec_prompt_template = """You are a general health information assistant — NOT a doctor. You NEVER prescribe, recommend or advise taking any medicine.
 
 Based ONLY on the abnormal lab values below:
@@ -284,6 +283,7 @@ Abnormal values from report:
 {abnormal_context}
 
 Answer in bullet points. Be extremely cautious and responsible."""
+
                     rec_prompt = ChatPromptTemplate.from_template(rec_prompt_template)
 
                     # Use same LLM — with safety
@@ -305,4 +305,5 @@ Answer in bullet points. Be extremely cautious and responsible."""
                         st.error(f"Error generating recommendations: {str(e)}")
 
             st.caption("These are general ideas only. Always see a doctor for real advice.")
+
 
